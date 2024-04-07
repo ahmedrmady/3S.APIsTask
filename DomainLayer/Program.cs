@@ -1,3 +1,5 @@
+using Task.Application.DI;
+using _3S.Task.Persistence.DI;
 namespace DomainLayer
 {
 	public class Program
@@ -13,6 +15,10 @@ namespace DomainLayer
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
+			
+			var configuration = builder.Configuration;
+			builder.Services.AddPresistence(configuration);
+			builder.Services.AddApplication();
 			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
