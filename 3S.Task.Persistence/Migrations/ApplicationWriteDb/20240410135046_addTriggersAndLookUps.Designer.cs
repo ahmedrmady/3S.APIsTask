@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using _3S.Task.Persistence.Contexts;
+using _3S.Task.Persistence;
 
 #nullable disable
 
-namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
+namespace _3S.Task.Persistence.Migrations.ApplicationWriteDb
 {
-    [DbContext(typeof(ApplicationReadDbContext))]
-    [Migration("20240404230009_intialCreate")]
-    partial class intialCreate
+    [DbContext(typeof(ApplicationWriteDbContext))]
+    [Migration("20240410135046_addTriggersAndLookUps")]
+    partial class addTriggersAndLookUps
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,11 +56,9 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId")
-                        .IsUnique();
+                    b.HasIndex("CityId");
 
-                    b.HasIndex("GovernateId")
-                        .IsUnique();
+                    b.HasIndex("GovernateId");
 
                     b.HasIndex("UserId");
 
@@ -79,7 +77,12 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GovernateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("GovernateId");
 
                     b.ToTable("City");
                 });
@@ -92,8 +95,9 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("GovernateName")
-                        .HasColumnType("int");
+                    b.Property<string>("GovernateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -136,17 +140,40 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Task.Domain.Entities.UsersGovsCount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GovName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GovernateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("usersGovsCounts");
+                });
+
             modelBuilder.Entity("Models.Address", b =>
                 {
                     b.HasOne("Models.City", "City")
-                        .WithOne()
-                        .HasForeignKey("Models.Address", "CityId")
+                        .WithMany()
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Models.Governate", "Governate")
-                        .WithOne()
-                        .HasForeignKey("Models.Address", "GovernateId")
+                        .WithMany()
+                        .HasForeignKey("GovernateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -161,6 +188,17 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
                     b.Navigation("Governate");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Models.City", b =>
+                {
+                    b.HasOne("Models.Governate", "Governate")
+                        .WithMany()
+                        .HasForeignKey("GovernateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Governate");
                 });
 
             modelBuilder.Entity("Models.User", b =>

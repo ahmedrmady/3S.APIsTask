@@ -3,32 +3,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
+namespace _3S.Task.Persistence.Migrations.ApplicationWriteDb
 {
-    public partial class intialCreate : Migration
+    public partial class iniailCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "City",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_City", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Governate",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GovernateName = table.Column<int>(type: "int", nullable: false)
+                    GovernateName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,6 +37,41 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "usersGovsCounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GovName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GovernateId = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_usersGovsCounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "City",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GovernateId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_City", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_City_Governate_GovernateId",
+                        column: x => x.GovernateId,
+                        principalTable: "Governate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,19 +113,22 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
             migrationBuilder.CreateIndex(
                 name: "IX_Address_CityId",
                 table: "Address",
-                column: "CityId",
-                unique: true);
+                column: "CityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Address_GovernateId",
                 table: "Address",
-                column: "GovernateId",
-                unique: true);
+                column: "GovernateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Address_UserId",
                 table: "Address",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_City_GovernateId",
+                table: "City",
+                column: "GovernateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -112,13 +137,16 @@ namespace _3S.Task.Persistence.Migrations.ApplicationReadDb
                 name: "Address");
 
             migrationBuilder.DropTable(
+                name: "usersGovsCounts");
+
+            migrationBuilder.DropTable(
                 name: "City");
 
             migrationBuilder.DropTable(
-                name: "Governate");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Governate");
         }
     }
 }

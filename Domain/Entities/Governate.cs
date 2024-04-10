@@ -3,6 +3,8 @@
     public class Governate
     {
         public int Id { get; set; }
-        public int GovernateName { get; set; }
+        public string GovernateName { get; set; }
+
+        
     }
 }

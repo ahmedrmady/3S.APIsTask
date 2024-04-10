@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Task.Application.Features;
+using Task.Application.Features.User.Validations;
 using Task.Application.Mapper;
+using MediatR;
+using System.Reflection;
+using Task.Domain.Shared;
+using System.Net.NetworkInformation;
 
 namespace Task.Application.DI
 {
@@ -14,25 +14,16 @@ namespace Task.Application.DI
 	{
 		public static IServiceCollection AddApplication(this IServiceCollection services)
 		{
-			#region Fluent Validation
 
-			//services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 			services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
-			#endregion
-
-			#region Inject Service
 
 			services.AddAutoMapper(typeof(MappingProfile));
 
-			#endregion
-
-			#region Mediator
-
-			// services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+			services.AddMediatR(cfg =>
+						  cfg.RegisterServicesFromAssembly(typeof(Ping).Assembly));
 			services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-			#endregion
 
 			return services;
 		}

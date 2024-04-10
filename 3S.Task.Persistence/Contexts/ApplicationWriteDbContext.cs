@@ -1,6 +1,8 @@
-﻿using Domain.Data.Configurations;
+﻿using _3S.Task.Persistence.Configurations;
+using Domain.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Task.Domain.Entities;
 
 namespace _3S.Task.Persistence
 {
@@ -15,9 +17,11 @@ namespace _3S.Task.Persistence
 		{
 			modelBuilder.ApplyConfiguration(new UserConfigurations());	
 			modelBuilder.ApplyConfiguration(new AddressConfigurations());	
+			modelBuilder.ApplyConfiguration(new CityConfiguration());	
 		}
 
 		public DbSet<User> Users { get; set; }
+		public DbSet<UsersGovsCount> usersGovsCounts { set; get; }
 
     }
 }

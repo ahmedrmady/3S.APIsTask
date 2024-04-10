@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task.Application.Dtos;
 using Task.Domain.Shared;
 
 namespace Task.Application.Features
@@ -23,7 +24,7 @@ namespace Task.Application.Features
 
 		public string Email { get; set; }
 
-		public ICollection<Address> Addresses { get; set; }
+		public ICollection<AddressDto> Addresses { get; set; }
 
 	}
 }

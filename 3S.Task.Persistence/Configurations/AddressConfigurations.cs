@@ -29,11 +29,12 @@ namespace Domain.Data.Configurations
 			builder.Property(a => a.FlatNumber)
 				   .IsRequired();
 
-			builder.HasOne(a => a.City)
-				   .WithOne();
+			//builder.HasOne(a => a.City)
+			//	   .WithOne()
+			//	   .;
 
-			builder.HasOne(a => a.Governate)
-				   .WithOne();
+			//builder.HasOne(a => a.Governate)
+			//	   .WithOne();
 
 
 

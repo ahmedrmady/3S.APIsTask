@@ -22,7 +22,7 @@ namespace Task.Domain.Shared
 		}
 
 		public static ResponseModel Success() => new(isSuccess: true, errorMessage: null);
-
+		 
 		public static ResponseModel Failure(object error) => new(false, errorMessage: error);
 	}
 }

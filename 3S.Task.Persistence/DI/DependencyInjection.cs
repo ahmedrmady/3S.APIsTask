@@ -21,9 +21,10 @@ namespace _3S.Task.Persistence.DI
 
 			var connectionstringwrite = configuration.GetConnectionString("ECOWrite");
 			services.AddDbContext<ApplicationWriteDbContext>(option => option.UseSqlServer(connectionstringwrite));
-
+			
 			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+			
 			return services;
 		}
 	}
